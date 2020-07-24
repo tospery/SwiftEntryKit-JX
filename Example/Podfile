@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'SwiftEntryKit-JX_Example' do
+  pod 'SwiftEntryKit-JX', :path => '../'
+
+  target 'SwiftEntryKit-JX_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

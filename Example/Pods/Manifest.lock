@@ -1,0 +1,23 @@
+PODS:
+  - QuickLayout (3.0.0)
+  - SwiftEntryKit-JX (1.2.3):
+    - QuickLayout (= 3.0.0)
+
+DEPENDENCIES:
+  - SwiftEntryKit-JX (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - QuickLayout
+
+EXTERNAL SOURCES:
+  SwiftEntryKit-JX:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  QuickLayout: 07b45a72b10083fee3f095990cfed1c1e7b27f0a
+  SwiftEntryKit-JX: 6c3c4429a8c23ef8c65c0fad448e5ef282491d28
+
+PODFILE CHECKSUM: 62ac7a4a6a0183d76fdf792497744825c7135b9f
+
+COCOAPODS: 1.9.3
