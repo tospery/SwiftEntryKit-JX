@@ -18,7 +18,7 @@ final public class EKAlertMessageView: EKSimpleMessageView, EntryAppearanceDescr
     
     var bottomCornerRadius: CGFloat = 0 {
         didSet {
-            buttonBarView.bottomCornerRadius = bottomCornerRadius
+            buttonBarView.bottomCornerRadius = buttonBarView.buttonBarContent.bottomMargin != 0 ? 0 : bottomCornerRadius
         }
     }
     
@@ -73,8 +73,8 @@ final public class EKAlertMessageView: EKSimpleMessageView, EntryAppearanceDescr
             buttonBarView.layout(.top, to: .bottom, of: messageContentView, offset: 10)
         }
         
-        buttonBarView.layoutToSuperview(axis: .horizontally)
-        buttonBarView.layoutToSuperview(.bottom)
+        buttonBarView.layoutToSuperview(axis: .horizontally, offset: buttonBarView.buttonBarContent.horizontalMargins)
+        buttonBarView.layoutToSuperview(.bottom, offset: -buttonBarView.buttonBarContent.bottomMargin)
         buttonBarView.alpha = 0
 
         if !message.buttonBarContent.content.isEmpty {

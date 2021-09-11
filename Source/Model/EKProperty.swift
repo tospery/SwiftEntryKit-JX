@@ -340,16 +340,23 @@ public struct EKProperty {
         /** The display mode of the button bar */
         public var displayMode: EKAttributes.DisplayMode
         
+        public var horizontalMargins: CGFloat
+        public var bottomMargin: CGFloat
+        
         public init(with buttonContents: ButtonContent...,
                     separatorColor: EKColor,
                     horizontalDistributionThreshold: Int = 2,
                     buttonHeight: CGFloat = 50,
+                    horizontalMargins: CGFloat = 0,
+                    bottomMargin: CGFloat = 0,
                     displayMode: EKAttributes.DisplayMode = .inferred,
                     expandAnimatedly: Bool) {
             self.init(with: buttonContents,
                       separatorColor: separatorColor,
                       horizontalDistributionThreshold: horizontalDistributionThreshold,
                       buttonHeight: buttonHeight,
+                      horizontalMargins: horizontalMargins,
+                      bottomMargin: bottomMargin,
                       displayMode: displayMode,
                       expandAnimatedly: expandAnimatedly)
         }
@@ -358,6 +365,8 @@ public struct EKProperty {
                     separatorColor: EKColor,
                     horizontalDistributionThreshold: Int = 2,
                     buttonHeight: CGFloat = 50,
+                    horizontalMargins: CGFloat = 0,
+                    bottomMargin: CGFloat = 0,
                     displayMode: EKAttributes.DisplayMode = .inferred,
                     expandAnimatedly: Bool) {
             guard horizontalDistributionThreshold > 0 else {
@@ -366,6 +375,8 @@ public struct EKProperty {
             self.separatorColor = separatorColor
             self.horizontalDistributionThreshold = horizontalDistributionThreshold
             self.buttonHeight = buttonHeight
+            self.horizontalMargins = horizontalMargins
+            self.bottomMargin = bottomMargin
             self.displayMode = displayMode
             self.expandAnimatedly = expandAnimatedly
             content.append(contentsOf: buttonContents)

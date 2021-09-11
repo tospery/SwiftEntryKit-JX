@@ -22,7 +22,7 @@ final public class EKButtonBarView: UIView {
     private var buttonViews: [EKButtonView] = []
     private var separatorViews: [UIView] = []
     
-    private let buttonBarContent: EKProperty.ButtonBarContent
+    public let buttonBarContent: EKProperty.ButtonBarContent
     private let spreadAxis: QLAxis
     private let oppositeAxis: QLAxis
     private let relativeEdge: NSLayoutConstraint.Attribute
