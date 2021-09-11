@@ -46,8 +46,9 @@ final public class EKButtonBarView: UIView {
             height += buttonBarContent.buttonHeight
         default:
             for _ in 1...buttonBarContent.content.count {
-                height += buttonBarContent.buttonHeight
+                height += (buttonBarContent.buttonHeight + buttonBarContent.padding)
             }
+            height += buttonBarContent.padding
         }
         return height
     }()
@@ -103,7 +104,7 @@ final public class EKButtonBarView: UIView {
             suffix.layout(.height, to: buttonViews.first!)
         }
         buttonViews.layoutToSuperview(axis: oppositeAxis)
-        buttonViews.spread(spreadAxis, stretchEdgesToSuperview: true)
+        buttonViews.spread(spreadAxis, stretchEdgesToSuperview: true, offset: buttonBarContent.padding)
         buttonViews.layout(relativeEdge, to: self, ratio: buttonEdgeRatio, priority: .must)
     }
     
