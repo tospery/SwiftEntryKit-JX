@@ -32,6 +32,15 @@ final class EKButtonView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if content.cornerRadius >= 0 {
+            layer.cornerRadius = content.cornerRadius
+        } else {
+            layer.cornerRadius = bounds.size.height / 2.0
+        }
+    }
+    
     private func setupAcceessibility() {
         isAccessibilityElement = false
         button.isAccessibilityElement = true
@@ -73,6 +82,7 @@ final class EKButtonView: UIView {
     }
     
     private func setupInterfaceStyle() {
+        layer.masksToBounds = true
         backgroundColor = content.backgroundColor(for: traitCollection)
         titleLabel.textColor = content.label.style.color(for: traitCollection)
     }

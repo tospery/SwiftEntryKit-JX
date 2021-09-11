@@ -22,6 +22,8 @@ public struct EKProperty {
         public var backgroundColor: EKColor
         public var highlightedBackgroundColor: EKColor
 
+        public var cornerRadius: CGFloat
+        
         /** Content edge inset */
         public var contentEdgeInset: CGFloat
         
@@ -38,6 +40,7 @@ public struct EKProperty {
                     backgroundColor: EKColor,
                     highlightedBackgroundColor: EKColor,
                     contentEdgeInset: CGFloat = 5,
+                    cornerRadius: CGFloat = 0,
                     displayMode: EKAttributes.DisplayMode = .inferred,
                     accessibilityIdentifier: String? = nil,
                     action: @escaping Action = {}) {
@@ -45,6 +48,7 @@ public struct EKProperty {
             self.backgroundColor = backgroundColor
             self.highlightedBackgroundColor = highlightedBackgroundColor
             self.contentEdgeInset = contentEdgeInset
+            self.cornerRadius = cornerRadius
             self.displayMode = displayMode
             self.accessibilityIdentifier = accessibilityIdentifier
             self.action = action
