@@ -36,6 +36,9 @@ class EKEntryView: EKStyleView {
     /** The content - contains the view, view controller, attributes */
     var content: Content
     
+    var presentInsideKeyWindow: Bool = false
+    var rollbackWindow: SwiftEntryKit.RollbackWindow = .main
+    
     private lazy var contentView: UIView = {
         return UIView()
     }()

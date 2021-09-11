@@ -91,16 +91,32 @@ final class EKWindowProvider: EntryPresenterDelegate {
      Privately used to display an entry
      */
     private func display(entryView: EKEntryView, using attributes: EKAttributes, presentInsideKeyWindow: Bool, rollbackWindow: SwiftEntryKit.RollbackWindow) {
+        entryView.presentInsideKeyWindow = presentInsideKeyWindow
+        entryView.rollbackWindow = rollbackWindow
         switch entryView.attributes.precedence {
         case .override(priority: _, dropEnqueuedEntries: let dropEnqueuedEntries):
             if dropEnqueuedEntries {
                 entryQueue.removeAll()
             }
             show(entryView: entryView, presentInsideKeyWindow: presentInsideKeyWindow, rollbackWindow: rollbackWindow)
-        case .enqueue where isCurrentlyDisplaying():
-            entryQueue.enqueue(entry: .init(view: entryView, presentInsideKeyWindow: presentInsideKeyWindow, rollbackWindow: rollbackWindow))
-        case .enqueue:
-            show(entryView: entryView, presentInsideKeyWindow: presentInsideKeyWindow, rollbackWindow: rollbackWindow)
+        case .enqueue(let newPriority):
+            guard let old = currentlyDisplayingEntry() else {
+                show(entryView: entryView, presentInsideKeyWindow: presentInsideKeyWindow, rollbackWindow: rollbackWindow)
+                return
+            }
+            var priority: EKAttributes.Precedence.Priority!
+            switch old.attributes.precedence {
+            case let .override(oldPriority, _):
+                priority = oldPriority
+            case let .enqueue(oldPriority):
+                priority = oldPriority
+            }
+            if newPriority >= priority {
+                show(entryView: entryView, presentInsideKeyWindow: presentInsideKeyWindow, rollbackWindow: rollbackWindow)
+                entryQueue.enqueue(entry: .init(view: old, presentInsideKeyWindow: old.presentInsideKeyWindow, rollbackWindow: old.rollbackWindow))
+            } else {
+                entryQueue.enqueue(entry: .init(view: entryView, presentInsideKeyWindow: presentInsideKeyWindow, rollbackWindow: rollbackWindow))
+            }
         }
     }
     
@@ -129,6 +145,21 @@ final class EKWindowProvider: EntryPresenterDelegate {
             return entryView.content.attributes.name == name
         } else { // Return true by default if the name is *nil*
             return true
+        }
+    }
+    
+    func currentlyDisplayingEntry(entryNamed name: String? = nil) -> EKEntryView? {
+        guard let entryView = entryView else {
+            return nil
+        }
+        if let name = name {
+            if name == entryView.content.attributes.name {
+                return entryView
+            } else {
+                return nil
+            }
+        } else {
+            return entryView
         }
     }
     
