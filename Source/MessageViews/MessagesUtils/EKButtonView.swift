@@ -14,14 +14,22 @@ final class EKButtonView: UIView {
     
     private let button = UIButton()
     private let titleLabel = UILabel()
+    private let gradientView = GradientView.init()
     
     private let content: EKProperty.ButtonContent
+    
+    private let zoomScale: CGFloat = 0.9
+    private let zoomDuration = 0.15
+    private var zoomIsFinished = true
     
     // MARK: - Setup
     
     init(content: EKProperty.ButtonContent) {
         self.content = content
         super.init(frame: .zero)
+        layer.borderWidth = content.borderWidth
+        layer.borderColor = content.borderColor.cgColor
+        setupGradientView()
         setupTitleLabel()
         setupButton()
         setupAcceessibility()
@@ -48,15 +56,38 @@ final class EKButtonView: UIView {
         button.accessibilityLabel = content.label.text
     }
     
+    private func setupGradientView() {
+        switch content.backgroundStyle {
+        case let .gradient(gradient):
+            gradientView.style = GradientView.Style(
+                gradient: gradient,
+                displayMode: content.displayMode
+            )
+            addSubview(gradientView)
+            gradientView.fillSuperview()
+        default:
+            break
+        }
+    }
+    
     private func setupButton() {
         addSubview(button)
         button.fillSuperview()
-        button.addTarget(self, action: #selector(buttonTouchUp),
-                         for: [.touchUpInside, .touchUpOutside, .touchCancel])
-        button.addTarget(self, action: #selector(buttonTouchDown),
-                         for: .touchDown)
-        button.addTarget(self, action: #selector(buttonTouchUpInside),
-                         for: .touchUpInside)
+        if content.zoomAnimatedly {
+            button.addTarget(self, action: #selector(buttonTouchUp),
+                             for: [.touchUpOutside, .touchCancel])
+            button.addTarget(self, action: #selector(buttonTouchDown),
+                             for: .touchDown)
+            button.addTarget(self, action: #selector(buttonTouchUpInside),
+                             for: .touchUpInside)
+        } else {
+            button.addTarget(self, action: #selector(buttonTouchUp),
+                             for: [.touchUpInside, .touchUpOutside, .touchCancel])
+            button.addTarget(self, action: #selector(buttonTouchDown),
+                             for: .touchDown)
+            button.addTarget(self, action: #selector(buttonTouchUpInside),
+                             for: .touchUpInside)
+        }
     }
     
     private func setupTitleLabel() {
@@ -90,15 +121,52 @@ final class EKButtonView: UIView {
     // MARK: - Selectors
     
     @objc func buttonTouchUpInside() {
-        content.action?()
+        if content.zoomAnimatedly {
+            content.action?()
+            self.buttonTouchUp()
+        } else {
+            content.action?()
+        }
     }
     
     @objc func buttonTouchDown() {
-        setBackground(by: content, isHighlighted: true)
+        if content.zoomAnimatedly {
+            if self.zoomIsFinished != true {
+                return
+            }
+            self.zoomIsFinished = false
+            UIView.animate(withDuration: self.zoomDuration) { [weak self] in
+                guard let `self` = self else { return }
+                self.transform = CGAffineTransform(scaleX: self.zoomScale, y: self.zoomScale)
+            } completion: { [weak self] finised in
+                guard let `self` = self else { return }
+                self.zoomIsFinished = finised
+            }
+        } else {
+            setBackground(by: content, isHighlighted: true)
+        }
     }
     
     @objc func buttonTouchUp() {
-        setBackground(by: content, isHighlighted: false)
+        if content.zoomAnimatedly {
+            var delay = self.zoomDuration
+            if self.zoomIsFinished {
+                delay = 0.01
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                guard let `self` = self else { return }
+                self.endZoomAnimation()
+            }
+        } else {
+            setBackground(by: content, isHighlighted: false)
+        }
+    }
+    
+    func endZoomAnimation() {
+        UIView.animate(withDuration: self.zoomDuration) { [weak self] in
+            guard let `self` = self else { return }
+            self.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

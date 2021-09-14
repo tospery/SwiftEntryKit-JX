@@ -33,22 +33,37 @@ public struct EKProperty {
         /** Accessibility identifier that identifies the button */
         public var accessibilityIdentifier: String?
         
+        public var borderWidth: CGFloat
+        public var borderColor: UIColor
+        
+        public var backgroundStyle: EKAttributes.BackgroundStyle
+        
+        public var zoomAnimatedly: Bool
+        
         /** Action */
         public var action: Action?
         
         public init(label: LabelContent,
                     backgroundColor: EKColor,
                     highlightedBackgroundColor: EKColor,
+                    backgroundStyle: EKAttributes.BackgroundStyle = .clear,
                     contentEdgeInset: CGFloat = 5,
                     cornerRadius: CGFloat = 0,
+                    borderWidth: CGFloat = 0,
+                    borderColor: UIColor = .clear,
+                    zoomAnimatedly: Bool = false,
                     displayMode: EKAttributes.DisplayMode = .inferred,
                     accessibilityIdentifier: String? = nil,
                     action: @escaping Action = {}) {
             self.label = label
             self.backgroundColor = backgroundColor
             self.highlightedBackgroundColor = highlightedBackgroundColor
+            self.backgroundStyle = backgroundStyle
             self.contentEdgeInset = contentEdgeInset
             self.cornerRadius = cornerRadius
+            self.borderWidth = borderWidth
+            self.borderColor = borderColor
+            self.zoomAnimatedly = zoomAnimatedly
             self.displayMode = displayMode
             self.accessibilityIdentifier = accessibilityIdentifier
             self.action = action
