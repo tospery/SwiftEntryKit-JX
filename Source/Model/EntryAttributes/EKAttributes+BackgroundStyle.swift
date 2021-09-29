@@ -92,7 +92,7 @@ public extension EKAttributes {
         }
         
         /** Visual Effect (Blurred) background style */
-        case visualEffect(style: BlurStyle)
+        case visualEffect(style: BlurStyle, alpha: CGFloat = 1.0)
         
         /** Color background style */
         case color(color: EKColor)
@@ -110,9 +110,9 @@ public extension EKAttributes {
         public static func == (lhs: EKAttributes.BackgroundStyle,
                                rhs: EKAttributes.BackgroundStyle) -> Bool {
             switch (lhs, rhs) {
-            case (visualEffect(style: let leftStyle),
-                  visualEffect(style: let rightStyle)):
-                return leftStyle == rightStyle
+            case (visualEffect(style: let leftStyle, alpha: let leftAlpha),
+                  visualEffect(style: let rightStyle, alpha: let rightAlpha)):
+                return leftStyle == rightStyle && leftAlpha == rightAlpha
             case (color(color: let leftColor),
                   color(color: let rightColor)):
                 return leftColor == rightColor

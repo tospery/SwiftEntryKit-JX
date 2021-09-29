@@ -61,9 +61,10 @@ final class EKBackgroundView: EKStyleView {
                 gradient = value
             case .image(image: let image):
                 backgroundImage = image
-            case .visualEffect(style: let value):
+            case let .visualEffect(value, alpha):
                 backgroundEffect = value.blurEffect(for: traitCollection,
                                                     mode: style.displayMode)
+                visualEffectView.alpha = alpha
             case .clear:
                 break
             }
@@ -82,9 +83,10 @@ final class EKBackgroundView: EKStyleView {
         case .color(color: let color):
             layer.backgroundColor = color.color(for: traitCollection,
                                                 mode: style.displayMode).cgColor
-        case .visualEffect(style: let value):
+        case let .visualEffect(value, alpha):
             visualEffectView.effect = value.blurEffect(for: traitCollection,
                                                        mode: style.displayMode)
+            visualEffectView.alpha = alpha
         default:
             break
         }
